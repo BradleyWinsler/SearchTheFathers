@@ -29,3 +29,9 @@ type AddCitationRequest struct {
 	PublishDate       string `json:"publish_date"`
 	Page              string `json:"page"`
 }
+
+type SearchCitationsRequest struct {
+	Source string `json:"source"`
+	Father string `json:"father"`
+	Tags   []Tag  `json:"tags"`
+}

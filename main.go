@@ -32,8 +32,9 @@ func main() {
 	tagHandlers := handlers.NewTagHandlers(mongoClient)
 
 	// Citation routes
-	r.HandleFunc("/api/citations", citationHandlers.GetCitations).Methods("GET")
+	r.HandleFunc("/api/citations", citationHandlers.GetAllCitations).Methods("GET")
 	r.HandleFunc("/api/citations/{id}", citationHandlers.GetCitation).Methods("GET")
+	r.HandleFunc("/api/citations/search", citationHandlers.SearchCitations).Methods("GET")
 	r.HandleFunc("/api/citations", citationHandlers.AddCitation).Methods("POST")
 	r.HandleFunc("/api/citations/{id}", citationHandlers.DeleteCitation).Methods("DELETE")
 

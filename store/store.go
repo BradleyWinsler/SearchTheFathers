@@ -25,8 +25,9 @@ type Tag struct {
 }
 
 type CitationStore interface {
-	GetCitations(ctx context.Context) ([]Citation, error)
+	GetAllCitations(ctx context.Context) ([]Citation, error)
 	GetCitation(ctx context.Context, id string) (*Citation, error)
+	SearchCitations(ctx context.Context, req *models.SearchCitationsRequest) ([]Citation, error)
 	InsertCitation(ctx context.Context, req *models.AddCitationRequest) (*Citation, error)
 	DeleteCitation(ctx context.Context, id string) error
 }

@@ -21,10 +21,10 @@ type CitationHandlers struct {
 	citationStore store.CitationStore
 }
 
-func (h *CitationHandlers) GetCitations(w http.ResponseWriter, r *http.Request) {
+func (h *CitationHandlers) GetAllCitations(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	cits, err := h.citationStore.GetCitations(context.Background())
+	cits, err := h.citationStore.GetAllCitations(context.Background())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -46,6 +46,20 @@ func (h *CitationHandlers) GetCitation(w http.ResponseWriter, r *http.Request) {
 	c := convertStoreToCitationModel([]store.Citation{*cit})
 
 	json.NewEncoder(w).Encode(c[0])
+}
+
+func (h *CitationHandlers) SearchCitations(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var sr models.SearchCitationsRequest
+	_ = json.NewDecoder(r.Body).Decode(&sr)
+
+	cits, err := h.citationStore.SearchCitations(context.Background(), &sr)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(convertStoreToCitationModel(cits))
 }
 
 func (h *CitationHandlers) AddCitation(w http.ResponseWriter, r *http.Request) {
