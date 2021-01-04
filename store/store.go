@@ -18,6 +18,6 @@ type Citation struct {
 	UpdatedAt         int64    `bson:"updated_at"`
 }
 
-type CitationsStore interface {
+type CitationStore interface {
 	GetCitations(ctx context.Context) ([]Citation, error)
 }
