@@ -1,5 +1,9 @@
 package store
 
+import (
+	"context"
+)
+
 type Citation struct {
 	ID                string   `bson:"_id"`
 	Source            string   `bson:"source"`

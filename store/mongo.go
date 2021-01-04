@@ -9,8 +9,8 @@ import (
 	"github.com/cenkalti/backoff"
 
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/mongo/readpref"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 // Connection settings
@@ -35,10 +35,10 @@ type Client struct {
 // Setup and teardown
 func NewClient(ctx context.Context, uri string) (*Client, error) {
 	var client *mongo.Client
-	if err := backoff.Retry(connect(uri, &client), backoff.WithMaxRetries(backoff.NewExponentialBackoff(), maxRetries)); err != nil {
+	if err := backoff.Retry(connect(uri, &client), backoff.WithMaxRetries(backoff.NewExponentialBackOff(), maxRetries)); err != nil {
 		return nil, fmt.Errorf("error connecting to mongo database: %w", err)
 	}
-	if err := backoff.Retry(ping(client), backoff.WithMaxRetries(backoff.NewExponentialBackoff(), maxRetries)); err != nil {
+	if err := backoff.Retry(ping(client), backoff.WithMaxRetries(backoff.NewExponentialBackOff(), maxRetries)); err != nil {
 		return nil, fmt.Errorf("error pinging database: %w", err)
 	}
 
