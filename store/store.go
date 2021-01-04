@@ -8,8 +8,10 @@ type Citation struct {
 	Tags              []string `bson:"tags"`
 	Publisher         string   `bson:"publisher"`
 	PublisherLocation string   `bson:"publisher_location"`
-	PublishDate       string   `bson:"publish_data"`
+	PublishDate       string   `bson:"publish_date"`
 	Page              string   `bson:"page"`
+	CreatedAt         int64    `bson:"created_at"`
+	UpdatedAt         int64    `bson:"updated_at"`
 }
 
 type CitationsStore interface {
