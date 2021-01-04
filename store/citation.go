@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+
+	"github.com/BradleyWinsler/SearchTheFathers/models"
 )
 
 func (c *Client) GetCitations(ctx context.Context) ([]Citation, error) {
@@ -53,13 +55,15 @@ func (c *Client) GetCitation(ctx context.Context, id string) (*Citation, error) 
 }
 
 func (c *Client) InsertCitation(ctx context.Context, req *models.AddCitationRequest) (*Citation, error) {
-	var tgs []store.Tag
+	var tgs []Tag
 	for _, t := range req.Tags {
-		tgs = append(tgs, t)
+		tgs = append(tgs, Tag{
+			Slug: t.Slug,
+		})
 	}
 
 	ct := Citation{
-		ID:                uuid.New(),
+		ID:                uuid.New().String(),
 		Source:            req.Source,
 		Father:            req.Father,
 		Quote:             req.Quote,
@@ -68,7 +72,7 @@ func (c *Client) InsertCitation(ctx context.Context, req *models.AddCitationRequ
 		PublisherLocation: req.PublisherLocation,
 		PublishDate:       req.PublishDate,
 		Page:              req.Page,
-		CreatedAt:         time.Now(),
+		CreatedAt:         time.Now().UnixNano(),
 		UpdatedAt:         0,
 	}
 

@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/gorilla/mux"
+
 	"github.com/BradleyWinsler/SearchTheFathers/models"
 	"github.com/BradleyWinsler/SearchTheFathers/store"
 )
@@ -43,7 +45,7 @@ func (h *CitationHandlers) GetCitation(w http.ResponseWriter, r *http.Request) {
 
 	c := convertStoreToCitationModel([]store.Citation{*cit})
 
-	json.NewEncoder(w).Encoder(c[0])
+	json.NewEncoder(w).Encode(c[0])
 }
 
 func (h *CitationHandlers) AddCitation(w http.ResponseWriter, r *http.Request) {
