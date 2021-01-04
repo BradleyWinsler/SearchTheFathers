@@ -1,0 +1,5 @@
+FROM scratch
+WORKDIR /
+EXPOSE 8000 
+COPY app .
+ENTRYPOINT ["/app"]
