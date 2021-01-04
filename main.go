@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"github.com/BradleyWinsler/SearchTheFathers/handlers"
 	"github.com/BradleyWinsler/SearchTheFathers/store"
 )
 
@@ -25,6 +26,12 @@ func main() {
 	defer func() {
 		_ = store.Close(mongoClient)
 	}()
+
+	// Setup the handlers with the mongo client
+	citationHandlers := handlers.NewCitationHandlers(mongoClient)
+
+	// Routes
+	r.HandleFunc("/api/citations", citationHandlers.GetCitations).Methods("GET")
 
 	log.Println("Serving on port 8000")
 
