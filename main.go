@@ -29,12 +29,18 @@ func main() {
 
 	// Setup the handlers with the mongo client
 	citationHandlers := handlers.NewCitationHandlers(mongoClient)
+	tagHandlers := handlers.NewTagHandlers(mongoClient)
 
-	// Routes
+	// Citation routes
 	r.HandleFunc("/api/citations", citationHandlers.GetCitations).Methods("GET")
 	r.HandleFunc("/api/citations/{id}", citationHandlers.GetCitation).Methods("GET")
 	r.HandleFunc("/api/citations", citationHandlers.AddCitation).Methods("POST")
 	r.HandleFunc("/api/citations/{id}", citationHandlers.DeleteCitation).Methods("DELETE")
+
+	// Tag routes
+	r.HandleFunc("/api/tags", tagHandlers.GetTags).Methods("GET")
+	r.HandleFunc("/api/tags/{slug}", tagHandlers.AddTag).Methods("POST")
+	r.HandleFunc("/api/tags/{slug}", tagHandlers.DeleteTag).Methods("DELETE")
 
 	log.Println("Serving on port 8000")
 

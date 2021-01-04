@@ -24,12 +24,14 @@ const (
 const (
 	database            = "fathers"
 	citationsCollection = "citations"
+	tagsCollection      = "tags"
 )
 
 // Client holds the dependencies needed to implement the store.
 type Client struct {
 	client        *mongo.Client
 	citationsColl *mongo.Collection
+	tagsColl      *mongo.Collection
 }
 
 // Setup and teardown
@@ -47,6 +49,7 @@ func NewClient(ctx context.Context, uri string) (*Client, error) {
 	var errs []error
 
 	errs = append(errs, db.CreateCollection(ctx, citationsCollection))
+	errs = append(errs, db.CreateCollection(ctx, tagsCollection))
 	for _, err := range errs {
 		if err != nil && !errors.As(err, &mongo.CommandError{}) {
 			return nil, err
@@ -54,10 +57,12 @@ func NewClient(ctx context.Context, uri string) (*Client, error) {
 	}
 
 	citationsColl := db.Collection(citationsCollection)
+	tagsColl := db.Collection(tagsCollection)
 
 	return &Client{
 		client:        client,
 		citationsColl: citationsColl,
+		tagsColl:      tagsColl,
 	}, nil
 }
 

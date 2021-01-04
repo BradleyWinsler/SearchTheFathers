@@ -30,3 +30,9 @@ type CitationStore interface {
 	InsertCitation(ctx context.Context, req *models.AddCitationRequest) (*Citation, error)
 	DeleteCitation(ctx context.Context, id string) error
 }
+
+type TagStore interface {
+	GetTags(ctx context.Context) ([]Tag, error)
+	InsertTag(ctx context.Context, slug string) (*Tag, error)
+	DeleteTag(ctx context.Context, slug string) error
+}
