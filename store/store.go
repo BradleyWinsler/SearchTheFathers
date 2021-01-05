@@ -29,6 +29,9 @@ type CitationStore interface {
 	GetCitation(ctx context.Context, id string) (*Citation, error)
 	SearchCitations(ctx context.Context, req *models.SearchCitationsRequest) ([]Citation, error)
 	InsertCitation(ctx context.Context, req *models.AddCitationRequest) (*Citation, error)
+	UpdateCitation(ctx context.Context, id string, req *models.AddCitationRequest) (*Citation, error)
+	AddTagToCitation(ctx context.Context, id, slug string) error
+	RemoveTagFromCitation(ctx context.Context, id, slug string) error
 	DeleteCitation(ctx context.Context, id string) error
 }
 

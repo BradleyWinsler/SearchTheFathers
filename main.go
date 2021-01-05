@@ -36,6 +36,9 @@ func main() {
 	r.HandleFunc("/api/citations/{id}", citationHandlers.GetCitation).Methods("GET")
 	r.HandleFunc("/api/citations/search", citationHandlers.SearchCitations).Methods("GET")
 	r.HandleFunc("/api/citations", citationHandlers.AddCitation).Methods("POST")
+	r.HandleFunc("/api/citations/{id}", citationHandlers.UpdateCitation).Methods("PUT")
+	r.HandleFunc("/api/citations/{id}/tags/add/{slug}", citationHandlers.AddTagToCitation).Methods("PUT")
+	r.HandleFunc("/api/citations/{id}/tags/remove/{slug}", citationHandlers.RemoveTagFromCitation).Methods("PUT")
 	r.HandleFunc("/api/citations/{id}", citationHandlers.DeleteCitation).Methods("DELETE")
 
 	// Tag routes

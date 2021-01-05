@@ -91,6 +91,49 @@ func (h *CitationHandlers) AddCitation(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(c[0])
 }
 
+func (h *CitationHandlers) UpdateCitation(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	var ur models.AddCitationRequest
+	_ = json.NewDecoder(r.Body).Decode(&ur)
+
+	cit, err := h.citationStore.UpdateCitation(context.Background(), params["id"], &ur)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	c := convertStoreToCitationModel([]store.Citation{*cit})
+
+	json.NewEncoder(w).Encode(c[0])
+}
+
+func (h *CitationHandlers) AddTagToCitation(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	id := params["id"]
+	slug := params["slug"]
+
+	if err := h.citationStore.AddTagToCitation(context.Background(), id, slug); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Write([]byte("Successfully added tag to citation."))
+}
+
+func (h *CitationHandlers) RemoveTagFromCitation(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	id := params["id"]
+	slug := params["slug"]
+
+	if err := h.citationStore.RemoveTagFromCitation(context.Background(), id, slug); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Write([]byte("Successfully removed tag from citation."))
+}
+
 func (h *CitationHandlers) DeleteCitation(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)

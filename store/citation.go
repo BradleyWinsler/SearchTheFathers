@@ -144,6 +144,87 @@ func (c *Client) InsertCitation(ctx context.Context, req *models.AddCitationRequ
 	return &ct, nil
 }
 
+func (c *Client) UpdateCitation(ctx context.Context, id string, req *models.AddCitationRequest) (*Citation, error) {
+	cit, err := c.GetCitation(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	ct := Citation{
+		ID:        id,
+		Tags:      cit.Tags,
+		CreatedAt: cit.CreatedAt,
+		UpdatedAt: time.Now().UnixNano(),
+	}
+
+	if req.Source != "" {
+		ct.Source = req.Source
+	}
+	if req.Father != "" {
+		ct.Father = req.Father
+	}
+	if req.Quote != "" {
+		ct.Quote = req.Quote
+	}
+	if req.Publisher != "" {
+		ct.Publisher = req.Publisher
+	}
+	if req.PublisherLocation != "" {
+		ct.PublisherLocation = req.PublisherLocation
+	}
+	if req.PublishDate != "" {
+		ct.PublishDate = req.PublishDate
+	}
+	if req.Page != "" {
+		ct.Page = req.Page
+	}
+
+	if err := c.DeleteCitation(ctx, id); err != nil {
+		return nil, err
+	}
+
+	if _, err := c.citationsColl.InsertOne(ctx, &ct); err != nil {
+		return nil, err
+	}
+
+	return &ct, nil
+}
+
+func (c *Client) AddTagToCitation(ctx context.Context, id, slug string) error {
+	filter := bson.M{"_id": id}
+	update := bson.M{
+		"$push": bson.M{
+			"tags": bson.M{
+				"slug": slug,
+			},
+		},
+	}
+
+	if _, err := c.citationsColl.UpdateOne(ctx, filter, update); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) RemoveTagFromCitation(ctx context.Context, id, slug string) error {
+	filter := bson.M{"_id": id}
+	tag := []Tag{Tag{Slug: slug}}
+	update := bson.M{
+		"$pull": bson.M{
+			"tags": bson.M{
+				"$in": tag,
+			},
+		},
+	}
+
+	if _, err := c.citationsColl.UpdateOne(ctx, filter, update); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (c *Client) DeleteCitation(ctx context.Context, id string) error {
 	filter := bson.M{"_id": id}
 
